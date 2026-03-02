@@ -1,0 +1,18 @@
+from sklearn.feature_extraction.text import TfidfVectorizer
+import pickle
+
+# Sample data for training the vectorizer
+documents = [
+    "This is a sample document about education.",
+    "This document discusses the training program.",
+    "Facilities are important for student satisfaction.",
+    "Lecturers play a crucial role in the learning process."
+]
+
+# Create and fit the TF-IDF vectorizer
+vectorizer = TfidfVectorizer()
+vectorizer.fit(documents)
+
+# Save the vectorizer to a file
+with open('tuned_models/optimized_tfidf_topic.pkl', 'wb') as f:
+    pickle.dump(vectorizer, f)
