@@ -1,0 +1,9 @@
+﻿text,sentiment,label
+"Giảng viên dạy rất hay và nhiệt tình, tôi học được nhiều kiến thức bổ ích",Tích cực,2
+"Môn học này quá khó và nhàm chán, tôi không hiểu gì cả",Tiêu cực,0
+"Lớp học bình thường, không có gì đặc biệt",Trung lập,1
+"Thầy giáo rất tâm huyết và chu đáo, luôn giúp đỡ sinh viên",Tích cực,2
+"Nội dung quá lý thuyết, thiếu thực hành, không hứng thú",Tiêu cực,0
+Môn học khá hay nhưng hơi khó,Tiêu cực,0
+"Giảng viên không nhiệt tình, giảng bài không rõ ràng",Tiêu cực,0
+"Tôi rất thích môn học này, sẽ tiếp tục học các môn liên quan",Tích cực,2

@@ -1,0 +1,14 @@
+{
+  "model_name": "Linear SVM",
+  "test_accuracy": 0.8885028427037271,
+  "f1_score": 0.886244940700424,
+  "precision": 0.8850309585094501,
+  "recall": 0.8885028427037271,
+  "train_time": 0.09334754943847656,
+  "num_features": 5000,
+  "label_names": {
+    "0": "Negative",
+    "1": "Neutral",
+    "2": "Positive"
+  }
+}

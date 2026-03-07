@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result.positive {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+        
+        .result.neutral {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+        }
+        
+        .result.negative {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+        
+        .sentiment-label {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .confidence {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .probabilities {
+            margin-top: 15px;
+        }
+        
+        .prob-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .prob-label {
+            width: 100px;
+            font-weight: 600;
+        }
+        
+        .prob-bar {
+            flex: 1;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+        
+        .prob-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease-out;
+        }
+        
+        .prob-value {
+            width: 50px;
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #667eea;
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .examples {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .examples h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .example-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 5px 5px 5px 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .example-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Phân tích Cảm xúc</h1>
+        <p class="subtitle">Nhập phản hồi của bạn bằng tiếng Việt</p>
+        
+        <div class="input-group">
+            <label for="textInput">Văn bản:</label>
+            <textarea 
+                id="textInput" 
+                rows="5" 
+                placeholder="Ví dụ: Giảng viên dạy rất hay và nhiệt tình..."
+            ></textarea>
+        </div>
+        
+        <button class="btn" onclick="predict()">Phân tích</button>
+        
+        <div class="loading" id="loading">
+            <p>⏳ Đang phân tích...</p>
+        </div>
+        
+        <div class="result" id="result"></div>
+        
+        <div class="examples">
+            <h3>📝 Thử với các ví dụ:</h3>
+            <span class="example-btn" onclick="setExample('Giảng viên dạy rất hay và nhiệt tình')">Tích cực</span>
+            <span class="example-btn" onclick="setExample('Môn học quá khó và nhàm chán')">Tiêu cực</span>
+            <span class="example-btn" onclick="setExample('Lớp học bình thường')">Trung lập</span>
+            <span class="example-btn" onclick="setExample('Thầy giáo rất tâm huyết và chu đáo')">Tích cực+</span>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'http://localhost:8000';
+        
+        function setExample(text) {
+            document.getElementById('textInput').value = text;
+        }
+        
+        async function predict() {
+            const text = document.getElementById('textInput').value.trim();
+            
+            if (!text) {
+                alert('Vui lòng nhập văn bản!');
+                return;
+            }
+            
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+            const btn = document.querySelector('.btn');
+            
+            // Show loading
+            loading.classList.add('show');
+            result.classList.remove('show');
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_URL}/predict`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: text })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+                
+                const data = await response.json();
+                displayResult(data);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Lỗi kết nối API! Hãy chắc chắn server đang chạy tại ' + API_URL);
+            } finally {
+                loading.classList.remove('show');
+                btn.disabled = false;
+            }
+        }
+        
+        function displayResult(data) {
+            const result = document.getElementById('result');
+            const sentiment = data.sentiment;
+            
+            // Determine class
+            let className = 'neutral';
+            let emoji = '😐';
+            if (sentiment === 'Tích cực') {
+                className = 'positive';
+                emoji = '😊';
+            } else if (sentiment === 'Tiêu cực') {
+                className = 'negative';
+                emoji = '😞';
+            }
+            
+            // Build probabilities HTML
+            let probsHTML = '';
+            if (data.probabilities) {
+                probsHTML = '<div class="probabilities">';
+                for (const [label, prob] of Object.entries(data.probabilities)) {
+                    probsHTML += `
+                        <div class="prob-item">
+                            <span class="prob-label">${label}</span>
+                            <div class="prob-bar">
+                                <div class="prob-fill" style="width: ${prob * 100}%"></div>
+                            </div>
+                            <span class="prob-value">${(prob * 100).toFixed(1)}%</span>
+                        </div>
+                    `;
+                }
+                probsHTML += '</div>';
+            }
+            
+            // Update result
+            result.className = `result ${className}`;
+            result.innerHTML = `
+                <div class="sentiment-label">${emoji} ${sentiment}</div>
+                ${data.confidence ? `<div class="confidence">Độ tin cậy: ${(data.confidence * 100).toFixed(1)}%</div>` : ''}
+                ${probsHTML}
+            `;
+            result.classList.add('show');
+        }
+        
+        // Allow Enter to submit
+        document.getElementById('textInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                predict();
+            }
+        });
+    </script>
+</body>
+</html>
