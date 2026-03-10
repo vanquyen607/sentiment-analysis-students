@@ -1,0 +1,17 @@
+import pickle
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Example data for training
+corpus = [
+    "This is a positive review.",
+    "This is a negative review.",
+    "This is a neutral review."
+]
+
+# Create and fit the TF-IDF vectorizer
+vectorizer = TfidfVectorizer()
+vectorizer.fit(corpus)
+
+# Save the vectorizer to a file
+with open('tuned_models/optimized_tfidf_sentiment.pkl', 'wb') as f:
+    pickle.dump(vectorizer, f)
