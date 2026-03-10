@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -924,4 +925,932 @@
         });
     </script>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Feedback Analyzer - Vietnamese</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Thêm Chart.js để vẽ biểu đồ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin-top: 15px;
+            backdrop-filter: blur(10px);
+            font-size: 0.9em;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            animation: fadeInUp 0.8s;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tab.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .input-section label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .examples {
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+        }
+
+        .examples-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .example-chip {
+            display: inline-block;
+            padding: 10px 18px;
+            background: white;
+            border-radius: 25px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .example-chip:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            min-width: 180px;
+            padding: 18px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            margin-top: 40px;
+            animation: slideInUp 0.6s;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .result-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .result-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-right: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .result-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .result-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .label-badge {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.2em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .sentiment-positive {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: #155724;
+        }
+
+        .sentiment-neutral {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #856404;
+        }
+
+        .sentiment-negative {
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            color: #721c24;
+        }
+
+        .topic-lecturer {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #004085;
+        }
+
+        .topic-training_program {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #0c5460;
+        }
+
+        .topic-facility {
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            color: #721c24;
+        }
+
+        .topic-others {
+            background: linear-gradient(135deg, #e0e0e0 0%, #c9c9c9 100%);
+            color: #383d41;
+        }
+
+        .confidence-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .confidence {
+            font-size: 1em;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 1s ease-out;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .history-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .history-text {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .history-results {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+        }
+
+        .export-btn {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .export-btn:hover {
+            background: #218838;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .main-card {
+                padding: 25px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-brain"></i> AI Feedback Analyzer</h1>
+            <p class="subtitle">Phân tích sentiment và chủ đề của feedback bằng Machine Learning</p>
+            <div class="badge">
+                <i class="fas fa-chart-line"></i> 89% Accuracy • <i class="fas fa-bolt"></i> Real-time
+            </div>
+        </div>
+
+        <div class="main-card">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('single')">Phân Tích Đơn</button>
+                <button class="tab" onclick="switchTab('stats')">Thống Kê</button>
+            </div>
+
+            <div id="singleTab" class="tab-content active">
+                <div class="input-section">
+                    <label>
+                        <i class="fas fa-comment-dots"></i>
+                        Nhập feedback của bạn:
+                    </label>
+                    <textarea 
+                        id="feedbackText" 
+                        rows="6" 
+                        placeholder="Ví dụ: Giảng viên dạy rất hay và dễ hiểu..."
+                        oninput="updateCharCounter()"
+                        maxlength="500"
+                    ></textarea>
+                    <div class="char-counter" id="charCounter">0 / 500 ký tự</div>
+                </div>
+
+                <div class="examples">
+                    <div class="examples-title">
+                        <i class="fas fa-lightbulb"></i> Ví dụ (click để thử):
+                    </div>
+                    <span class="example-chip" onclick="setExample('Giảng viên dạy rất hay và dễ hiểu')">
+                        <i class="fas fa-star"></i> Giảng viên tốt
+                    </span>
+                    <span class="example-chip" onclick="setExample('Cơ sở vật chất trường còn thiếu thốn')">
+                        <i class="fas fa-building"></i> CSVC thiếu
+                    </span>
+                    <span class="example-chip" onclick="setExample('Chương trình đào tạo cần cập nhật')">
+                        <i class="fas fa-book"></i> Chương trình
+                    </span>
+                    <span class="example-chip" onclick="setExample('Thầy giảng bài không rõ ràng')">
+                        <i class="fas fa-question-circle"></i> Giảng viên kém
+                    </span>
+                    <span class="example-chip" onclick="setExample('Phòng học sạch sẽ, thoáng mát')">
+                        <i class="fas fa-check-circle"></i> Phòng học tốt
+                    </span>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" onclick="predictFeedback()">
+                        <i class="fas fa-magic"></i> Phân Tích Ngay
+                    </button>
+                    <button class="btn-secondary" onclick="clearAll()">
+                        <i class="fas fa-redo"></i> Làm Mới
+                    </button>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p style="color: #667eea; font-weight: 600;">Đang phân tích...</p>
+                </div>
+
+                <div class="error" id="error"></div>
+
+                <div class="results" id="results">
+                    <div class="result-box">
+                        <div class="result-header">
+                            <div class="result-icon" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
+                                😊
+                            </div>
+                            <div class="result-title">
+                                <i class="fas fa-heart"></i> Sentiment
+                            </div>
+                        </div>
+                        <div class="result-content">
+                            <span class="label-badge" id="sentimentLabel">Positive</span>
+                            <div class="confidence-section">
+                                <div class="confidence" id="sentimentConfidence">Độ tin cậy: 95%</div>
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" id="sentimentBar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-box">
+                        <div class="result-header">
+                            <div class="result-icon" style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);">
+                                📚
+                            </div>
+                            <div class="result-title">
+                                <i class="fas fa-tags"></i> Topic
+                            </div>
+                        </div>
+                        <div class="result-content">
+                            <span class="label-badge" id="topicLabel">Lecturer</span>
+                            <div class="confidence-section">
+                                <div class="confidence" id="topicConfidence">Độ tin cậy: 88%</div>
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" id="topicBar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="statsTab" class="tab-content">
+                <h3 style="margin-bottom: 20px;">
+                    <i class="fas fa-chart-bar"></i> Thống Kê
+                </h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalAnalysis">0</div>
+                        <div class="stat-label">Tổng phân tích</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="positiveCount">0</div>
+                        <div class="stat-label">Tích cực</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="neutralCount">0</div>
+                        <div class="stat-label">Trung tính</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="negativeCount">0</div>
+                        <div class="stat-label">Tiêu cực</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <h4 style="margin-bottom: 15px;">Lịch Sử Gần Đây</h4>
+                    <div id="historyList"></div>
+                    <!-- Thêm nút xuất CSV -->
+                    <button class="export-btn" onclick="exportHistoryToCSV()">
+                        <i class="fas fa-download"></i> Xuất CSV
+                    </button>
+                </div>
+
+                <!-- Thêm phần biểu đồ -->
+                <div class="chart-container">
+                    <div class="chart-title">Phân Bố Sentiment Qua Thời Gian</div>
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Phân Bố Topic Qua Thời Gian</div>
+                    <canvas id="topicChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let stats = JSON.parse(localStorage.getItem('stats') || '{"total": 0, "positive": 0, "neutral": 0, "negative": 0}');
+        // Thêm mảng lịch sử phân tích
+        let history = JSON.parse(localStorage.getItem('history') || '[]');
+        let sentimentChart, topicChart; // Thêm biến để lưu instance biểu đồ
+
+        const sentimentLabels = {
+            'positive': { text: 'Tích cực', class: 'sentiment-positive', icon: '😊' },
+            'neutral': { text: 'Trung tính', class: 'sentiment-neutral', icon: '😐' },
+            'negative': { text: 'Tiêu cực', class: 'sentiment-negative', icon: '😞' }
+        };
+
+        const topicLabels = {
+            'lecturer': { text: 'Giảng viên', class: 'topic-lecturer', icon: '👨‍🏫' },
+            'training_program': { text: 'Chương trình đào tạo', class: 'topic-training_program', icon: '📖' },
+            'facility': { text: 'Cơ sở vật chất', class: 'topic-facility', icon: '🏫' },
+            'others': { text: 'Khác', class: 'topic-others', icon: '📋' }
+        };
+
+        function updateCharCounter() {
+            const text = document.getElementById('feedbackText').value;
+            document.getElementById('charCounter').textContent = `${text.length} / 500 ký tự`;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'single') {
+                document.getElementById('singleTab').classList.add('active');
+                document.querySelector('.tab[onclick*="single"]').classList.add('active');
+            } else if (tab === 'stats') {
+                document.getElementById('statsTab').classList.add('active');
+                document.querySelector('.tab[onclick*="stats"]').classList.add('active');
+                updateStats(); // Gọi để cập nhật và vẽ biểu đồ khi chuyển tab
+            }
+        }
+
+        function setExample(text) {
+            document.getElementById('feedbackText').value = text;
+            updateCharCounter();
+        }
+
+        function clearAll() {
+            document.getElementById('feedbackText').value = '';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+            updateCharCounter();
+        }
+
+        async function predictFeedback() {
+            const text = document.getElementById('feedbackText').value.trim();
+            
+            if (!text) {
+                showError('Vui lòng nhập feedback!');
+                return;
+            }
+
+            showLoading(true);
+            hideError();
+            document.getElementById('results').style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_URL}/predict`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+
+                if (!response.ok) throw new Error('API Error');
+
+                const data = await response.json();
+                displayResults(data);
+                updateLocalStats(data.sentiment.sentiment);
+                // Thêm vào lịch sử
+                addToHistory(text, data);
+            } catch (error) {
+                showError('Không thể kết nối đến server!');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Hàm thêm vào lịch sử
+        function addToHistory(text, data) {
+            const entry = {
+                text: text,
+                sentiment: data.sentiment.sentiment,
+                sentimentConfidence: data.sentiment.confidence,
+                topic: data.topic.topic,
+                topicConfidence: data.topic.confidence,
+                timestamp: new Date().toISOString()
+            };
+            history.unshift(entry); // Thêm vào đầu
+            if (history.length > 50) history = history.slice(0, 50); // Giới hạn 50 mục
+            localStorage.setItem('history', JSON.stringify(history));
+        }
+
+        // Hàm xuất CSV
+        function exportHistoryToCSV() {
+            if (history.length === 0) {
+                alert('Không có lịch sử để xuất!');
+                return;
+            }
+            let csv = 'Text,Sentiment,Sentiment Confidence,Topic,Topic Confidence,Timestamp\n';
+            history.forEach(entry => {
+                csv += `"${entry.text.replace(/"/g, '""')}","${entry.sentiment}","${entry.sentimentConfidence}","${entry.topic}","${entry.topicConfidence}","${entry.timestamp}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'analysis_history.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function displayResults(data) {
+            const sentiment = data.sentiment.sentiment;
+            const topic = data.topic.topic;
+
+            const sentimentInfo = sentimentLabels[sentiment];
+            document.getElementById('sentimentLabel').textContent = sentimentInfo.text;
+            document.getElementById('sentimentLabel').className = `label-badge ${sentimentInfo.class}`;
+            
+            if (data.sentiment.confidence) {
+                const confidence = (data.sentiment.confidence * 100).toFixed(1);
+                document.getElementById('sentimentConfidence').textContent = `Độ tin cậy: ${confidence}%`;
+                setTimeout(() => {
+                    document.getElementById('sentimentBar').style.width = `${confidence}%`;
+                }, 100);
+            }
+
+            const topicInfo = topicLabels[topic];
+            document.getElementById('topicLabel').textContent = topicInfo.text;
+            document.getElementById('topicLabel').className = `label-badge ${topicInfo.class}`;
+            
+            if (data.topic.confidence) {
+                const confidence = (data.topic.confidence * 100).toFixed(1);
+                document.getElementById('topicConfidence').textContent = `Độ tin cậy: ${confidence}%`;
+                setTimeout(() => {
+                    document.getElementById('topicBar').style.width = `${confidence}%`;
+                }, 100);
+            }
+
+            document.querySelector('.result-box:nth-child(1) .result-icon').textContent = sentimentInfo.icon;
+            document.querySelector('.result-box:nth-child(2) .result-icon').textContent = topicInfo.icon;
+
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function updateLocalStats(sentiment) {
+            stats.total++;
+            stats[sentiment]++;
+            localStorage.setItem('stats', JSON.stringify(stats));
+        }
+
+        function updateStats() {
+            document.getElementById('totalAnalysis').textContent = stats.total;
+            document.getElementById('positiveCount').textContent = stats.positive;
+            document.getElementById('neutralCount').textContent = stats.neutral;
+            document.getElementById('negativeCount').textContent = stats.negative;
+            // Hiển thị lịch sử
+            displayHistory();
+            // Vẽ biểu đồ
+            drawCharts();
+        }
+
+        // Hàm hiển thị lịch sử
+        function displayHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            history.slice(0, 10).forEach(entry => { // Hiển thị 10 mục gần nhất
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.innerHTML = `
+                    <div class="history-text">${entry.text}</div>
+                    <div class="history-results">
+                        <span class="label-badge ${sentimentLabels[entry.sentiment].class}">${sentimentLabels[entry.sentiment].text}</span>
+                        <span class="label-badge ${topicLabels[entry.topic].class}">${topicLabels[entry.topic].text}</span>
+                    </div>
+                `;
+                historyList.appendChild(item);
+            });
+        }
+
+        // Hàm vẽ biểu đồ (cập nhật để hủy biểu đồ cũ và kiểm tra dữ liệu)
+        function drawCharts() {
+            // Hủy biểu đồ cũ nếu tồn tại
+            if (sentimentChart) sentimentChart.destroy();
+            if (topicChart) topicChart.destroy();
+
+            if (history.length === 0) {
+                // Nếu không có dữ liệu, hiển thị thông báo
+                document.getElementById('sentimentChart').style.display = 'none';
+                document.getElementById('topicChart').style.display = 'none';
+                const noDataMsg = document.createElement('p');
+                noDataMsg.textContent = 'Chưa có dữ liệu lịch sử để vẽ biểu đồ.';
+                noDataMsg.style.textAlign = 'center';
+                noDataMsg.style.color = '#666';
+                document.querySelector('.chart-container').appendChild(noDataMsg);
+                return;
+            }
+
+            document.getElementById('sentimentChart').style.display = 'block';
+            document.getElementById('topicChart').style.display = 'block';
+
+            // Biểu đồ sentiment
+            const sentimentCounts = { positive: 0, neutral: 0, negative: 0 };
+            history.forEach(entry => sentimentCounts[entry.sentiment]++);
+            const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
+            sentimentChart = new Chart(sentimentCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Tích cực', 'Trung tính', 'Tiêu cực'],
+                    datasets: [{
+                        data: [sentimentCounts.positive, sentimentCounts.neutral, sentimentCounts.negative],
+                        backgroundColor: ['#84fab0', '#ffecd2', '#fbc2eb']
+                    }]
+                }
+            });
+
+            // Biểu đồ topic
+            const topicCounts = { lecturer: 0, training_program: 0, facility: 0, others: 0 };
+            history.forEach(entry => topicCounts[entry.topic]++);
+            const topicCtx = document.getElementById('topicChart').getContext('2d');
+            topicChart = new Chart(topicCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Giảng viên', 'Chương trình đào tạo', 'Cơ sở vật chất', 'Khác'],
+                    datasets: [{
+                        data: [topicCounts.lecturer, topicCounts.training_program, topicCounts.facility, topicCounts.others],
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.querySelectorAll('button').forEach(btn => btn.disabled = show);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('error').style.display = 'none';
+        }
+
+        document.getElementById('feedbackText').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                predictFeedback();
+            }
+        });
+
+        window.addEventListener('load', async function() {
+            updateStats(); // Đảm bảo cập nhật ban đầu
+            try {
+                const response = await fetch(`${API_URL}/health`);
+                if (!response.ok) {
+                    showError('⚠️ API không phản hồi. Chạy: python main.py');
+                }
+            } catch (error) {
+                showError('⚠️ Không thể kết nối đến API. Chạy: python main.py');
+            }
+        });
+    </script>
+</body>
+>>>>>>> ac82025111293788ba7c961553195313ed0bf602
 </html>

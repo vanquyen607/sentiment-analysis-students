@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # FastAPI và dependencies
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
@@ -18,3 +19,12 @@ python-json-logger==2.0.7
 # Testing (optional)
 pytest==7.4.3
 httpx==0.25.2
+=======
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pydantic==2.9.2
+scikit-learn==1.5.2
+numpy==1.26.4
+scipy==1.14.1
+python-multipart==0.0.12
+>>>>>>> ac82025111293788ba7c961553195313ed0bf602
