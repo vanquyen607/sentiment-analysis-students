@@ -1,31 +1,3 @@
-<<<<<<< HEAD
-# Dockerfile
-FROM python:3.10-slim
-
-# Set working directory
-WORKDIR /app
-
-# Copy requirements first for better caching
-COPY requirements.txt .
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application code
-COPY main.py .
-
-# Copy models directory
-COPY tuned_models/ ./tuned_models/
-
-# Expose port
-EXPOSE 8000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/health')"
-
-# Run the application
-=======
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -50,5 +22,4 @@ RUN mkdir -p static
 
 EXPOSE 8000
 
->>>>>>> ac82025111293788ba7c961553195313ed0bf602
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
