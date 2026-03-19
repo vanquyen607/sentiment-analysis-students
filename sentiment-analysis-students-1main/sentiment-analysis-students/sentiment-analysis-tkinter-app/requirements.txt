@@ -1,0 +1,8 @@
+FastAPI
+tkinter
+pydantic
+scikit-learn
+numpy
+requests
+pandas
+re
