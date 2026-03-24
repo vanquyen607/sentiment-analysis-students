@@ -366,3 +366,5 @@ MIT License
 For issues and questions, please open an issue on GitHub.
 
 ---
+
+**Made with ❤️ using FastAPI and Scikit-learn**
